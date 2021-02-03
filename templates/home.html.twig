@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - {{ parent() }}{% endblock %}
+
+{% block body %}
+
+    {% for picture in pictures %}
+        <div class="picture-block">
+            <img href="assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}">
+            <p>{{ picture.owner.username }} - {{ picture.description }}</p>
+        </div>
+    {% endfor %}
+
+{% endblock %}
