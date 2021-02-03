@@ -29,12 +29,14 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank(message="Veuillez renseigner une adresse mail")
+     * @Assert\Email(message="Veuillez renseigner une adresse email valide")
      */
     private string $email;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank(message="Veuillez choisir un pseudo")
+     * @Assert\Regex(pattern="/[a-zA-Z0-9\-]+$/", message="Votre pseudo ne peut contenir que des tirets ('-'), des chiffres, ou des lettres")
      */
     private string $username;
 

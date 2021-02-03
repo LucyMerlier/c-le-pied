@@ -6,8 +6,9 @@
 
     {% for picture in pictures %}
         <div class="picture-block">
-            <img href="assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}">
-            <p>{{ picture.owner.username }} - {{ picture.description }}</p>
+            <h2><a href="{{ path('app_profile', { 'username' : picture.owner.username }) }}">{{ picture.owner.username }}</a></h2>
+            <a href="{{ path('app_show_picture', { 'id' : picture.id }) }}"><img src="/assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}"></a>
+            <p>{{ picture.description }}</p>
         </div>
     {% endfor %}
 

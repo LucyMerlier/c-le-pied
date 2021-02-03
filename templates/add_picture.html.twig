@@ -3,4 +3,10 @@
 {% block title %}Ajouter une image - {{ parent() }}{% endblock %}
 
 {% block body %}
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+        <button>{{ button_label|default('Poster la photo') }}</button>
+    {{ form_end(form) }}
+
 {% endblock %}

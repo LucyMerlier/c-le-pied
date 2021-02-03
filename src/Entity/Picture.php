@@ -15,6 +15,7 @@ use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
+ * @Vich\Uploadable
  */
 class Picture
 {
@@ -27,19 +28,24 @@ class Picture
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="Veuillez ajouter une image")
      */
-    private string $imageURL;
+    private ?string $imageURL = '';
 
     /**
-     * @Vich\UploadableField(mapping="picture_file", fileNameProperty="photo")
-     * @Assert\NotBlank(message="Veuillez ajouter une image")
+     * @Vich\UploadableField(mapping="picture_file", fileNameProperty="imageURL")
+     * @Assert\File(
+     *      maxSize="5M",
+     *      maxSizeMessage="Votre fichier ne peut pas dépasser {{ limit }}{{ suffix }}",
+     *      mimeTypes={"image/jpg", "image/jpeg", "img/png", "image/gif"},
+     *      mimeTypesMessage="Votre fichier doit être de type .jpg, .png ou .gif"
+     * )
      */
     private File $imageFile;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank(message="Veuillez ajouter une description")
+     * @Assert\Length(min=1, max=255, minMessage="Votre description doit faire minimum {{ limit }} caractère", maxMessage="Votre description doit faire maximum {{ limit }} caractère")
      */
     private string $description;
 
@@ -55,7 +61,7 @@ class Picture
     private Collection $comments;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      */
     private DateTime $updatedAt;
 
@@ -74,7 +80,7 @@ class Picture
         return $this->imageURL;
     }
 
-    public function setImageURL(string $imageURL): self
+    public function setImageURL(?string $imageURL): self
     {
         $this->imageURL = $imageURL;
 
