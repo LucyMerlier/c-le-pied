@@ -9,10 +9,15 @@ use Doctrine\Persistence\ObjectManager;
 
 class PictureFixtures extends Fixture implements DependentFixtureInterface
 {
+    public function getDependencies(): array
+    {
+        return [UserFixtures::class];
+    }
+
     public function load(ObjectManager $manager)
     {
-        // $product = new Product();
-        // $manager->persist($product);
+        $product = new Product();
+        $manager->persist($product);
 
         $manager->flush();
     }
