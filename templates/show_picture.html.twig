@@ -5,7 +5,9 @@
 {% block body %}
     <div class="picture-block">
         <h2><a href="{{ path('app_profile', { username: picture.owner.username }) }}">{{ picture.owner.username }}</a></h2>
-        <img src="/assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}">
+        <figure>
+            <img src="/assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}">
+        </figure>
         <p>{{ picture.description }}</p>
     </div>
 

@@ -3,11 +3,14 @@
 {% block title %}{{ user.username }} - {{ parent() }}{% endblock %}
 
 {% block body %}
+    <h1>{{ user.username }}</h1>
 
     {% for picture in user.pictures %}
-    <div class="picture-block">
-        <a href="{{ path('app_show_picture', { id: picture.id }) }}"><img src="/assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}"></a>
-    </div>
+        <a href="{{ path('app_show_picture', { id: picture.id }) }}">
+            <figure>
+                <img src="/assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}">
+            </figure>
+        </a>
     {% endfor %}
 
     <a href="{{ path('app_logout') }}">Se déconnecter</a>
