@@ -59,6 +59,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int

@@ -121,4 +121,22 @@ class DefaultController extends AbstractController
 
         return $this->redirectToRoute('app_show_picture', ['id' => $comment->getPicture()->getId()]);
     }
+
+    /**
+     * @Route("/{id}/like", name="picture_like", methods={"GET", "POST"})
+     */
+    public function switchLike(Picture $picture, EntityManagerInterface $entityManager)
+    {
+        if (!$this->getUser()->hasLiked($picture)) {
+            $this->getUser()->addToLike($picture);
+        } else {
+            $this->getUser()->removeFromLike($picture);
+        }
+        
+        $entityManager->flush();
+
+        return $this->json([
+            'hasLiked' => $this->getUser()->hasLiked($picture),
+        ]);
+    }
 }
