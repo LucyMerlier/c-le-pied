@@ -66,9 +66,7 @@ class User implements UserInterface
     {
         $this->pictures = new ArrayCollection();
         $this->likes = new ArrayCollection();
-    }
-
-    
+    }    
 
     public function getId(): ?int
     {
