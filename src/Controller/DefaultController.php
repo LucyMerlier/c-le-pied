@@ -91,6 +91,11 @@ class DefaultController extends AbstractController
             $entityManager->flush();
         }
 
+        unset($comment);
+        unset($form);
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+
         return $this->render('show_picture.html.twig', [
             'picture' => $picture,
             'form' => $form->createView(),
