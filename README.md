@@ -1,4 +1,4 @@
-# CHECKPOINT 4 - C'est le pied!*
+# CHECKPOINT 4 - C'est le pied!
 
 ## What is "C'est le pied!"?
 
