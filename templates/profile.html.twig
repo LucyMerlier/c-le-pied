@@ -12,6 +12,10 @@
         {% endif %}
     </div>
 
+    {% if user.pictures is empty %}
+        <p>Vous n'avez encore rien posté</p>
+    {% endif %}
+
     <div class="pictures">
         {% for picture in user.pictures|reverse %}
             <a href="{{ path('app_show_picture', { id: picture.id }) }}">
