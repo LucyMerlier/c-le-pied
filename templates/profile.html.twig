@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.username }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="profile-header">
+        <h2>{{ user.username }}</h2>
+
+        {% if app.user == user %}
+            <a class="link" href="{{ path('app_favorites', {username: app.user.username}) }}">Mes favoris</a>
+            <a class="link" href="{{ path('app_logout') }}">Se déconnecter</a>
+        {% endif %}
+    </div>
+
+    {% if user.pictures is empty %}
+        <p>Vous n'avez encore rien posté</p>
+    {% endif %}
+
+    <div class="pictures">
+        {% for picture in user.pictures|reverse %}
+            <a href="{{ path('app_show_picture', { id: picture.id }) }}">
+                <figure class="profile-page-picture">
+                    <img class="feet-pic" src="/assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}">
+                </figure>
+            </a>
+        {% endfor %}
+    </div>
+
+{% endblock %}
