@@ -6,16 +6,43 @@
         {% block stylesheets %}<link rel="stylesheet" href="{{ asset('assets/styles/app.css') }}">{% endblock %}
     </head>
     <body>
-        <header>
+        <header id="header">
             <navbar>
-                <ul>
-                    <li><a href="{{ path('app_home') }}">Accueil</a></li>
-                    <li><a href="{{ path('app_add_picture') }}">Ajouter une image</a></li>
+                <ul class="nav">
+                    <li>
+                        <h1 class="brand-name">C'est le pied !</h1>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_home') }}">
+                            {% if app.request.attributes.get('_route') == 'app_home' %}
+                                <img class="nav-icon" src="{{ asset('assets/images/home2.png') }}">
+                            {% else %}
+                                <img class="nav-icon" src="{{ asset('assets/images/home.png') }}">
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_add_picture') }}">
+                            {% if app.request.attributes.get('_route') == 'app_add_picture' %}
+                                <img class="nav-icon" src="{{ asset('assets/images/plus-sign2.png') }}">
+                            {% else %}
+                                <img class="nav-icon" src="{{ asset('assets/images/plus-sign.png') }}">
+                            {% endif %}
+                        </a>
+                    </li>
                     <li>
                         {% if app.user %}
-                            <a href="{{ path('app_profile', { username: app.user.username }) }}">Mon profil</a>
+                            <a href="{{ path('app_profile', { username: app.user.username }) }}">
+                                {% if app.request.attributes.get('_route') == 'app_profile' and app.request.attributes.get('_route_params')['username'] == app.user.username %}
+                                    <img class="nav-icon" src="{{ asset('assets/images/user2.png') }}">
+                                {% else %}
+                                    <img class="nav-icon" src="{{ asset('assets/images/user.png') }}">
+                                {% endif %}
+                            </a>
                         {% else %}
-                            <a href="{{ path('app_login') }}">Se connecter</a>
+                            <a href="{{ path('app_login') }}">
+                                <img class="nav-icon" src="{{ asset('assets/images/user.png') }}">
+                            </a>
                         {% endif %}
                     </li>
                 </ul>
@@ -25,7 +52,11 @@
         <main>
             {% block body %}{% endblock %}
         </main>
-        
-        {% block javascripts %}{% endblock %}
+
+        <footer id="footer">
+            <button onclick="backToTop()" id="scroll-top"><img class="icon" src="{{ asset('assets/images/arrow.png') }}"></button>
+        </footer>
+
+        {% block javascripts %}<script src="{{ asset('assets/scripts/app.js') }}"></script>{% endblock %}
     </body>
 </html>

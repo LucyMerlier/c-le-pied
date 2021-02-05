@@ -1,19 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ user.username }} - {{ parent() }}{% endblock %}
+{% block title %}Mes favoris - {{ parent() }}{% endblock %}
 
 {% block body %}
     <div class="profile-header">
-        <h2>{{ user.username }}</h2>
-
-        {% if app.user == user %}
-            <a class="link" href="{{ path('app_favorites', {username: app.user.username}) }}">Mes favoris</a>
-            <a class="link" href="{{ path('app_logout') }}">Se déconnecter</a>
-        {% endif %}
+        <h2>Mes favoris</h2>       
+        <a class="link" href="{{ path('app_profile', {username: app.user.username}) }}">Retour à mon profil</a>
     </div>
 
     <div class="pictures">
-        {% for picture in user.pictures|reverse %}
+        {% for picture in app.user.likes|reverse %}
             <a href="{{ path('app_show_picture', { id: picture.id }) }}">
                 <figure class="profile-page-picture">
                     <img class="feet-pic" src="/assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}">

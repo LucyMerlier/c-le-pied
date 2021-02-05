@@ -3,10 +3,11 @@
 {% block title %}Ajouter une image - {{ parent() }}{% endblock %}
 
 {% block body %}
-
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-        <button>{{ button_label|default('Poster la photo') }}</button>
-    {{ form_end(form) }}
-
+    <div class="form-block">
+        {{ form_start(form) }}
+        {{ form_row(form.imageFile, {label: 'Ajoutez une image'}) }}
+        {{ form_row(form.description) }}
+            <button class="button">{{ button_label|default('Poster la photo') }}</button>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

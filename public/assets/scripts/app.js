@@ -1,27 +1,32 @@
-require('bootstrap');
+footer = document.getElementById("footer");
 
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import '@fortawesome/fontawesome-free/js/all.js';
+window.onscroll = function() {scrollFunction()};
 
-document.querySelector('#like').addEventListener('click', likePicture);
+function scrollFunction()
+{
+    if (document.body.scrollTop > 10 || document.documentElement.scrollTop > 10) {
+        footer.style.display = "block";
+    } else {
+        footer.style.display = "none";
+    }
+}
 
-function likePicture(event)
+function backToTop()
+{
+    window.scroll({
+        top: 0, 
+        left: 0, 
+        behavior: 'smooth'
+    });
+}
+
+document.querySelectorAll('.like').forEach(item => {item.addEventListener('click', addToLikes)});
+
+function addToLikes(event)
 {
     event.preventDefault();
-
     let likeLink = event.currentTarget;
     let link = likeLink.href;
-    fetch(link)
-        .then(res => res.json())
-        .then(function(res) {
-            let likeIcon = likeLink.firstElementChild;
-            if (res.hasLiked) {
-                likeIcon.classList.remove('far');
-                likeIcon.classList.add('fas');
-            } else {
-                likeIcon.classList.remove('fas');
-                likeIcon.classList.add('far');
-            }
-        })
-    ;
+    fetch(link);
+    document.location.reload();
 }

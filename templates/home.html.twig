@@ -4,19 +4,43 @@
 
 {% block body %}
 
-    <h1>C'est le pied !</h1>
-    <p>Les petons de vos ami(e)s, des pattes de chatons trop mimis, ou tout simplement des pieds de lits, vous trouverez tous les pieds sont ici !</p>
+    <p>Les petons de vos ami(e)s, des pattes de chatons trop mimis, ou tout simplement des pieds de lits, vous cherchez des pieds, c'est ici !</p>
 
-    {% for picture in pictures %}
+    {% for picture in pictures|reverse %}
+        <hr>
         <div class="picture-block">
-            <h2><a href="{{ path('app_profile', { username: picture.owner.username }) }}">{{ picture.owner.username }}</a></h2>
+            <a href="{{ path('app_profile', { username: picture.owner.username }) }}"><h2>{{ picture.owner.username }} ></h2></a>
             <a href="{{ path('app_show_picture', { id: picture.id }) }}">
-                    <figure>
-                        <img src="/assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}">
-                    </figure>
+                <figure>
+                    <img class="feet-pic" src="/assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}">
+                </figure>
             </a>
-            <p>{{ picture.description }}</p>
+            <div class="description-block">
+                <p>{{ picture.description }}</p>
+                {% if is_granted("ROLE_ADMIN") or app.user == picture.owner %}
+                    <form method="post" action="{{ path('app_delete_picture', { id: picture.id }) }}" onsubmit="return confirm('Êtes-vous sûr(e) de vouloir supprimer cette photo?');">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ picture.id) }}">
+                        <button class="button">Supprimer</button>
+                    </form>
+                {% elseif app.user %}
+                    <a class="like" href="{{ path('app_like', {id: picture.id})}}">
+                        {% if app.user.hasLiked(picture) %}
+                            <img class="like-icon" src="{{ asset('assets/images/like2.png') }}">
+                        {% else %}
+                            <img class="like-icon" src="{{ asset('assets/images/like.png') }}">
+                        {% endif %}
+                    </a>
+                {% else %}
+                    <a class="like-not-connected" href="{{ path('app_login') }}">
+                        <img class="like-icon" src="{{ asset('assets/images/like.png') }}">
+                    </a>
+                {% endif %}
+                <p>{{ picture.userLikes|length }}</p>
+            </div>
         </div>
     {% endfor %}
+
+    <p class="center">Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p>
 
 {% endblock %}

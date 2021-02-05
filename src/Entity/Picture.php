@@ -65,10 +65,20 @@ class Picture
      */
     private DateTime $updatedAt;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="likes")
+     */
+    private Collection $userLikes;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->likes = new ArrayCollection();
+        $this->userLikes = new ArrayCollection();
+    }
+
+    public function __serialize(): array
+    {
+        return ['' => null];
     }
 
     public function getId(): ?int
@@ -170,5 +180,32 @@ class Picture
     public function setUpdatedAt($updatedAt): void
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUserLikes(): Collection
+    {
+        return $this->userLikes;
+    }
+
+    public function addUserLike(User $user): self
+    {
+        if (!$this->userLikes->contains($user)) {
+            $this->userLikes[] = $user;
+            $user->addLike($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLike(User $user): self
+    {
+        if ($this->userLikes->removeElement($user)) {
+            $user->removeLike($this);
+        }
+
+        return $this;
     }
 }

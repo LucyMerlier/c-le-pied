@@ -43,6 +43,15 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/favoris", name="favorites")
+     * @IsGranted("ROLE_CONTRIBUTOR")
+     */
+    public function favorites(): Response
+    {
+        return $this->render('favorites.html.twig');
+    }
+
+    /**
      * @Route("/poster-une-photo", name="add_picture")
      * @IsGranted("ROLE_CONTRIBUTOR")
      */
@@ -90,6 +99,7 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("photo/{id}/supprimer", name="delete_picture", methods={"DELETE"})
+     * @IsGranted("ROLE_CONTRIBUTOR")
      */
     public function deletePicture(Request $request, Picture $picture, EntityManagerInterface $entityManager): Response
     {
@@ -107,6 +117,7 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("commentaire/{id}/supprimer", name="delete_comment", methods={"DELETE"})
+     * @IsGranted("ROLE_CONTRIBUTOR")
      */
     public function deleteComment(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
     {
@@ -123,16 +134,17 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/like", name="picture_like", methods={"GET", "POST"})
+     * @Route("/photo/{id}/like", name="like", methods={"GET", "POST"})
+     * @IsGranted("ROLE_CONTRIBUTOR")
      */
-    public function switchLike(Picture $picture, EntityManagerInterface $entityManager)
+    public function switchLike(Picture $picture, EntityManagerInterface $entityManager): Response
     {
         if (!$this->getUser()->hasLiked($picture)) {
-            $this->getUser()->addToLike($picture);
+            $this->getUser()->addLike($picture);
         } else {
-            $this->getUser()->removeFromLike($picture);
+            $this->getUser()->removeLike($picture);
         }
-        
+
         $entityManager->flush();
 
         return $this->json([

@@ -36,6 +36,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank(message="Veuillez choisir un pseudo")
+     * @Assert\Length(min=1, max=20, minMessage="Votre description doit faire minimum {{ limit }} caractère", maxMessage="Votre description doit faire maximum {{ limit }} caractère")
      * @Assert\Regex(pattern="/[a-zA-Z0-9\-]+$/", message="Votre pseudo ne peut contenir que des tirets ('-'), des chiffres, ou des lettres")
      */
     private string $username;
@@ -56,11 +57,18 @@ class User implements UserInterface
      */
     private Collection $pictures;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Picture::class, inversedBy="userLikes")
+     */
+    private Collection $likes;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
         $this->likes = new ArrayCollection();
     }
+
+    
 
     public function getId(): ?int
     {
@@ -175,5 +183,38 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Picture[]
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Picture $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Picture $like): self
+    {
+        $this->likes->removeElement($like);
+
+        return $this;
+    }
+
+    public function hasLiked(Picture $picture): bool
+    {
+        if ($this->likes->contains($picture)) {
+            return true;
+        }
+
+        return false;
     }
 }

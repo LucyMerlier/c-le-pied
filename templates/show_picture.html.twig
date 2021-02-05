@@ -4,41 +4,61 @@
 
 {% block body %}
     <div class="picture-block">
-        <h2><a href="{{ path('app_profile', { username: picture.owner.username }) }}">{{ picture.owner.username }}</a></h2>
+        <a href="{{ path('app_profile', { username: picture.owner.username }) }}"><h2>{{ picture.owner.username }}</h2></a>
         <figure>
-            <img src="/assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}">
+            <img class="feet-pic" src="/assets/uploads/{{ picture.imageURL }}" alt="{{ picture.description }}">
         </figure>
-        <p>{{ picture.description }}</p>
+        <div class="description-block">
+            <p>{{ picture.description }}</p>
+            {% if is_granted("ROLE_ADMIN") or app.user == picture.owner %}
+                <form method="post" action="{{ path('app_delete_picture', { id: picture.id }) }}" onsubmit="return confirm('Êtes-vous sûr(e) de vouloir supprimer cette photo?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ picture.id) }}">
+                    <button class="button">Supprimer</button>
+                </form>
+            {% elseif app.user %}
+                <a class="like" href="{{ path('app_like', {id: picture.id})}}">
+                    {% if app.user.hasLiked(picture) %}
+                        <img class="like-icon" src="{{ asset('assets/images/like2.png') }}">
+                    {% else %}
+                        <img class="like-icon" src="{{ asset('assets/images/like.png') }}">
+                    {% endif %}
+                </a>
+            {% else %}
+                <a class="like-not-connected" href="{{ path('app_login') }}">
+                    <img class="like-icon" src="{{ asset('assets/images/like.png') }}">
+                </a>
+            {% endif %}
+            <p>{{ picture.userLikes|length }}</p>
+        </div>
     </div>
 
-    {% if is_granted("ROLE_ADMIN") or app.user == picture.owner %}
-        <form method="post" action="{{ path('app_delete_picture', { id: picture.id }) }}" onsubmit="return confirm('Êtes-vous sûr(e) de vouloir supprimer cette photo?');">
-            <input type="hidden" name="_method" value="DELETE">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ picture.id) }}">
-            <button class="btn">Delete</button>
-        </form>
-    {% endif %}
 
     <div class="comments-block">
         <h2>Commentaires</h2>
 
         {% if app.user %}
-            <p>Ajouter un commentaire</p>
-            {{ form_start(form) }}
-            {{ form_widget(form) }}
-            <button class="btn">{{ button_label|default('Ajouter') }}</button>
-            {{ form_end(form) }}
+            <p>Ajoutez un commentaire</p>
+            <div class="form-block">
+                {{ form_start(form) }}
+                {{ form_row(form.comment, {label: false}) }}
+                <button class="button">Publier</button>
+                {{ form_end(form) }}
+            </div>
         {% endif %}
 
         {% for comment in picture.comments|reverse %}
-            <p>{{ comment.author.username }} says : {{ comment.comment }}</p>
-            {% if is_granted("ROLE_ADMIN") or app.user == comment.author %}
-                <form method="post" action="{{ path('app_delete_comment', { id: comment.id }) }}" onsubmit="return confirm('Êtes-vous sûr(e) de vouloir supprimer ce commentaire?');">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
-                    <button class="btn">Delete</button>
-                </form>
-            {% endif %}
+            <div class="comment-block">
+                <p class="name"><a href="{{ path('app_profile', { username: picture.owner.username }) }}">{{ comment.author.username }}</a> says :</p><p class="comment">{{ comment.comment }}</p>
+                {% if is_granted("ROLE_ADMIN") or app.user == comment.author %}
+                    <form method="post" action="{{ path('app_delete_comment', { id: comment.id }) }}" onsubmit="return confirm('Êtes-vous sûr(e) de vouloir supprimer ce commentaire?');">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                        <button class="button">Supprimer</button>
+                    </form>
+                {% endif %}
+            </div>
+            <hr>
         {% endfor %}
         
     </div>

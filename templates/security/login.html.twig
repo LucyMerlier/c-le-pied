@@ -3,31 +3,31 @@
 {% block title %}Connexion - {{ parent() }}{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+<div class="form-block">
+    <form method="post">
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            Vous êtes connecté en tant que {{ app.user.username }}, <a href="{{ path('app_logout') }}">se déconnecter</a>
-        </div>
-    {% endif %}
+        {% if app.user %}
+            <div class="mb-3">
+                Vous êtes connecté en tant que {{ app.user.username }}, <a href="{{ path('app_logout') }}">se déconnecter</a>
+            </div>
+        {% endif %}
 
-    <h2>Connectez-vous</h2>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
-    <label for="inputPassword">Mot de passe</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" required>
+        <h2>Connectez-vous</h2>
+        <label for="inputEmail">Email</label>
+        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" required autofocus>
+        <label for="inputPassword">Mot de passe</label>
+        <input type="password" name="password" id="inputPassword" required>
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Connexion
-    </button>
-</form>
+        <button class="button" type="submit">
+            Connexion
+        </button>
+    </form>
+</div>
 
-<p>Vous n'avez pas encore de compte? <a href="{{ path('app_register') }}">Inscrivez-vous</a></p>
+<p class="center">Vous n'avez pas encore de compte? <br><a class="link" href="{{ path('app_register') }}">Inscrivez-vous</a></p>
 {% endblock %}
