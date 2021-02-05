@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use App\Security\LoginFormAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,6 +67,56 @@ class SecurityController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
+
+            return $guardHandler->authenticateUserAndHandleSuccess(
+                $user,
+                $request,
+                $authenticator,
+                'main' // firewall name in security.yaml
+            );
+        }
+
+        return $this->render('security/register.html.twig', [
+            'registrationForm' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * This controller is only used to register the initial admin user when the client installs the project
+     * @Route("/register-first-user", name="app_register_first_user")
+     */
+    public function registerFirstUser(
+        Request $request,
+        UserPasswordEncoderInterface $passwordEncoder,
+        GuardAuthenticatorHandler $guardHandler,
+        LoginFormAuthenticator $authenticator,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository
+    ): ?Response {
+        // check if there is already an existing admin in the database
+        // TODO: CREATE BETTER CHECK WITH ROLES
+        if (!empty($userRepository->findByUsername('admin'))) {
+            return $this->redirectToRoute('app_login');
+        }
+
+
+        $user = new User();
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // encode the plain password
+            $user->setPassword(
+                $passwordEncoder->encodePassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+
+            $user->setRoles(['ROLE_ADMIN']);
+
+            $entityManager->persist($user);
+            $entityManager->flush();
 
             return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,

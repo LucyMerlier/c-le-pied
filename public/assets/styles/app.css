@@ -188,8 +188,12 @@ textarea {
     height: 32px;
 }
 
-main {
-    margin-bottom: 66px;
+#bottom-margin {
+    margin-bottom: 10vw;
+    width: 100vw;
+    height: 10vw;
+    max-width: 960px;
+    max-height: 96px;
 }
 
 #footer {
@@ -209,7 +213,8 @@ main {
     height: 10vw;
     max-width: 96px;
     max-height: 96px;
-    border: none;
-    background-color: transparent;
+    border: solid white 1px;
+    border-radius: 100%;
+    background-color: white;
     z-index: 2;
 }
