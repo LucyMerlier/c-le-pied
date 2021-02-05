@@ -80,6 +80,8 @@ class DefaultController extends AbstractController
      */
     public function showPicture(Picture $picture, EntityManagerInterface $entityManager, Request $request): Response
     {
+        unset($comment);
+        unset($form);
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
@@ -90,6 +92,11 @@ class DefaultController extends AbstractController
             $entityManager->persist($comment);
             $entityManager->flush();
         }
+
+        unset($comment);
+        unset($form);
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
 
         return $this->render('show_picture.html.twig', [
             'picture' => $picture,
