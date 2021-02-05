@@ -80,8 +80,6 @@ class DefaultController extends AbstractController
      */
     public function showPicture(Picture $picture, EntityManagerInterface $entityManager, Request $request): Response
     {
-        unset($comment);
-        unset($form);
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
